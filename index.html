@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practical R&D Roadmap for Environment-Friendly Thermonuclear Explosions — Interactive 3D Visualizations</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-bg: #fafafa;
+    --c-ink: #1a1a1a;
+    --c-muted: #77756e;
+    --c-accent: #8B0000;
+    --c-accent2: #3a5a78;
+    --c-warn: #a78642;
+    --c-green: #4b9062;
+    --c-card: #ffffff;
+    --c-stripe: #f1f1ef;
+    --c-border: #dcdcd6;
+    --c-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--c-bg);
+    color: var(--c-ink);
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  /* ─── Top nav ───────────────────────────────────────── */
+  header.nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250,250,250,0.95);
+    backdrop-filter: saturate(180%) blur(8px);
+    -webkit-backdrop-filter: saturate(180%) blur(8px);
+    border-bottom: 1px solid var(--c-border);
+    padding: 12px 28px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .nav .id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: var(--c-accent);
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .nav .title {
+    font-size: 12pt; font-weight: 500; color: var(--c-ink);
+    flex: 1;
+  }
+  .nav .title .sep { color: var(--c-muted); margin: 0 8px; }
+  .nav .meta {
+    font-size: 9pt; color: var(--c-muted);
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .nav a {
+    color: var(--c-accent); text-decoration: none;
+    font-size: 10pt; font-weight: 500;
+    padding: 6px 12px; border-radius: 4px;
+    transition: background 0.15s;
+  }
+  .nav a:hover { background: rgba(139,0,0,0.08); }
+  /* ─── Hero ──────────────────────────────────────────── */
+  .hero {
+    padding: 80px 32px 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--c-border);
+  }
+  .hero .kicker {
+    font-size: 10pt;
+    color: var(--c-accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .hero .kicker .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--c-accent);
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 36pt;
+    line-height: 1.15;
+    font-weight: 900;
+    margin: 0 0 24px;
+    letter-spacing: -0.5px;
+    max-width: 900px;
+  }
+  .hero .sub {
+    font-size: 14pt;
+    line-height: 1.55;
+    color: var(--c-ink);
+    max-width: 720px;
+    font-weight: 400;
+    margin-bottom: 28px;
+  }
+  .hero .sub em {
+    color: var(--c-accent);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .hero .meta-row {
+    display: flex;
+    gap: 32px;
+    font-size: 10pt;
+    color: var(--c-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .hero .meta-row span strong { color: var(--c-ink); font-weight: 700; }
+  /* ─── Warning banner ────────────────────────────────── */
+  .warning {
+    background: #fbeeee;
+    border-left: 3px solid var(--c-accent);
+    padding: 14px 20px;
+    margin: 24px 32px;
+    max-width: 1136px;
+    margin-left: auto; margin-right: auto;
+    font-size: 11pt;
+    line-height: 1.55;
+    color: var(--c-ink);
+    font-style: italic;
+  }
+  .warning b { color: var(--c-accent); font-style: normal; }
+  /* ─── Section ──────────────────────────────────────── */
+  section {
+    padding: 60px 32px 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  section h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 24pt;
+    font-weight: 700;
+    margin: 0 0 12px;
+    color: var(--c-ink);
+  }
+  section .h2-num {
+    color: var(--c-accent);
+    font-weight: 500;
+    margin-right: 14px;
+    font-size: 14pt;
+    vertical-align: top;
+  }
+  section .lede {
+    font-size: 12pt;
+    line-height: 1.7;
+    color: var(--c-ink);
+    max-width: 760px;
+    margin-bottom: 28px;
+  }
+  /* ─── 3D viewer ────────────────────────────────────── */
+  .viewer {
+    background: #0e1216;
+    border-radius: 8px;
+    box-shadow: var(--c-shadow);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .viewer canvas { display: block; width: 100%; }
+  .viewer .overlay {
+    position: absolute;
+    top: 16px; left: 20px;
+    color: #f4f4f4;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    letter-spacing: 1px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .viewer .overlay .label {
+    color: #f4f4f4;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .viewer .overlay .sub {
+    color: #c0c0c0;
+    font-weight: 400;
+  }
+  .viewer .controls {
+    position: absolute;
+    bottom: 16px; right: 16px;
+    background: rgba(0,0,0,0.5);
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: #f4f4f4;
+    font-size: 9pt;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+  }
+  .viewer .legend {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 10px 14px;
+    border-radius: 6px;
+    color: #f4f4f4;
+    font-size: 8.5pt;
+    line-height: 1.55;
+    font-family: 'JetBrains Mono', monospace;
+    z-index: 10;
+    max-width: 200px;
+  }
+  .viewer .legend .item {
+    display: flex; align-items: center; margin-bottom: 4px;
+  }
+  .viewer .legend .item:last-child { margin-bottom: 0; }
+  .viewer .legend .swatch {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    margin-right: 8px;
+  }
+  /* ─── Time controls ────────────────────────────────── */
+  .timeline {
+    background: rgba(255,255,255,0.95);
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: #1a1a1a;
+  }
+  .timeline .label { color: var(--c-muted); font-size: 9pt; letter-spacing: 1px; text-transform: uppercase; }
+  .timeline input[type=range] {
+    flex: 1;
+    accent-color: var(--c-accent);
+  }
+  .timeline .play {
+    background: var(--c-accent);
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .timeline .play:hover { background: #a00000; }
+  .timeline .time-val {
+    font-weight: 700;
+    color: var(--c-accent);
+    min-width: 80px;
+    text-align: right;
+  }
+  /* ─── Caption ──────────────────────────────────────── */
+  .caption {
+    font-size: 10pt;
+    line-height: 1.6;
+    color: var(--c-muted);
+    font-style: italic;
+    margin: 12px 0 0;
+    padding: 0 4px;
+    border-left: 2px solid var(--c-border);
+    padding-left: 14px;
+  }
+  /* ─── Two-column body ─────────────────────────────── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin: 30px 0;
+  }
+  .two-col .col p {
+    font-size: 11pt;
+    line-height: 1.7;
+    margin: 0 0 14px;
+    color: var(--c-ink);
+  }
+  .two-col .col h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--c-accent);
+    margin: 0 0 12px;
+  }
+  /* ─── Equation box ────────────────────────────────── */
+  .eq {
+    background: var(--c-stripe);
+    border-left: 3px solid var(--c-accent);
+    padding: 16px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11pt;
+    line-height: 1.6;
+    margin: 18px 0;
+    color: var(--c-ink);
+    overflow-x: auto;
+  }
+  .eq .num { color: var(--c-accent); font-weight: 700; margin-right: 10px; }
+  .eq .var { font-style: italic; }
+  .eq .greek { font-family: 'JetBrains Mono', monospace; }
+  /* ─── Stat block ──────────────────────────────────── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 30px 0;
+  }
+  .stats .stat {
+    background: var(--c-card);
+    border: 1px solid var(--c-border);
+    padding: 18px 16px;
+    border-radius: 6px;
+    box-shadow: var(--c-shadow);
+  }
+  .stats .stat .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22pt;
+    font-weight: 700;
+    color: var(--c-accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stats .stat .lab {
+    font-size: 9pt;
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.4;
+  }
+  /* ─── Tables ──────────────────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 10pt;
+  }
+  th, td {
+    padding: 9px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--c-border);
+  }
+  th {
+    background: #6b603f;
+    color: white;
+    font-weight: 600;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  tr:nth-child(even) { background: var(--c-stripe); }
+  td.num { text-align: right; font-family: 'JetBrains Mono', monospace; }
+  /* ─── Footer ──────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--c-border);
+    padding: 40px 32px;
+    max-width: 1200px;
+    margin: 60px auto 0;
+    font-size: 9.5pt;
+    color: var(--c-muted);
+    line-height: 1.6;
+  }
+  footer .row {
+    display: flex; justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  footer .row .left { color: var(--c-accent); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  footer .row .right { color: var(--c-muted); letter-spacing: 1px; text-transform: uppercase; }
+  footer p { margin: 14px 0 0; }
+  /* ─── Responsive ──────────────────────────────────── */
+  @media (max-width: 800px) {
+    .two-col { grid-template-columns: 1fr; gap: 20px; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .hero h1 { font-size: 24pt; }
+    .hero .sub { font-size: 12pt; }
+    section { padding: 30px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="id">ISRI-86-07.4 / 2026</div>
+  <div class="title">Practical R&amp;D Roadmap for Environment-Friendly Thermonuclear Explosions<span class="sep">·</span>Interactive 3D Visualizations</div>
+  <div class="meta">Unclassified · Nov 2026</div>
+  <a href="#sec1">§1 Burn</a>
+  <a href="#sec2">§2 Implosion</a>
+  <a href="#sec3">§3 Plasma Jet</a>
+</header>
+
+<div class="hero">
+  <div class="kicker"><span class="dot"></span>TECHNICAL ASSESSMENT · COMPANION HTML TO THE PDF REPORT</div>
+  <h1>Practical R&amp;D Roadmap for<br>Environment-Friendly<br>Thermonuclear Explosions</h1>
+  <div class="sub">Interactive Three.js visualizations of <em>antiproton-induced thermonuclear burn</em>, the <em>collapsing-Li&#8322;DT-shell implosion geometry</em>, and the <em>plasma-jet directed-energy-weapon</em> concept &mdash; companions to the 42-page PDF report. All content drawn from open, peer-reviewed scientific literature.</div>
+  <div class="meta-row">
+    <span><strong>Author</strong> &nbsp;Ren Timer, CTO &mdash; Aumnium Technology</span>
+    <span><strong>URLs</strong> &nbsp;hardagent.one &middot; aumnium.tech/products &middot; stoXswap.com/anonhost &middot; stoXswap.com/finance</span>
+    <span><strong>Source basis</strong> &nbsp;Gsponer-Hurni 1986/2005 (arXiv:physics/0507114) + 26 cited open sources</span>
+  </div>
+</div>
+
+<div class="warning">
+  <b>Unclassified · No build-instruction content.</b> This HTML is a visual companion to the PDF report. It contains no classified, proprietary, or weapon-construction information. All technical data are reproduced from open scientific literature (Gsponer &amp; Hurni 1986/2005; Perkins-Orth-Tabak 2004; Shmatov 2005; Azizi 2023; ALPHA/BASE CERN updates 2024-2026; NIF 2022-2025). The intended audience is policy and defense analysts requiring a technical-understanding brief.
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- §1  ANTIPROTON-ICF BURN                                          -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<section id="sec1">
+  <h2><span class="h2-num">§ 1</span>Antiproton-induced thermonuclear burn</h2>
+  <div class="lede">
+    A small (~10<sup>18</sup>) number of antiprotons annihilate at the centre of a
+    compressed Li&#8322;DT fuel sphere. The charged pions (3&thinsp;&pi;<sup>&plusmn;</sup> per
+    annihilation, E = 236 MeV each) deposit energy in the surrounding fuel by
+    multiple Coulomb scattering. If the spark energy exceeds the critical
+    E<sub>c</sub>/&kappa;<sup>2</sup> and the temperature exceeds T<sub>c</sub>, an outgoing
+    spherical thermonuclear detonation wave propagates through the fuel.
+  </div>
+
+  <div class="viewer" id="viewer1">
+    <div class="overlay">
+      <div class="label">Antiproton-Induced Burn Wave</div>
+      <div class="sub">Compressed Li&#8322;DT &middot; &kappa; = 30</div>
+    </div>
+    <div class="legend">
+      <div class="item"><div class="swatch" style="background:#c43030"></div>Spark (T<sub>c</sub> = 13.6 keV)</div>
+      <div class="item"><div class="swatch" style="background:#e07c30"></div>Burn front (T &gt; T<sub>c</sub>)</div>
+      <div class="item"><div class="swatch" style="background:#6b9b4a"></div>Burn wave (outward)</div>
+      <div class="item"><div class="swatch" style="background:#3a5a78"></div>Unburned Li&#8322;DT</div>
+      <div class="item"><div class="swatch" style="background:#f0d070"></div>&pi;<sup>&plusmn;</sup> tracks</div>
+    </div>
+    <canvas id="canvas1"></canvas>
+    <div class="timeline">
+      <span class="label">Burn evolution t / &tau;</span>
+      <input type="range" id="burn-slider" min="0" max="100" value="0" step="0.5">
+      <span class="time-val" id="burn-time">0.00 &tau;</span>
+      <button class="play" id="burn-play">Play</button>
+    </div>
+    <div class="controls">DRAG to rotate &middot; SCROLL to zoom</div>
+  </div>
+  <div class="caption">
+    Figure 1 &mdash; Three.js interactive simulation of the thermonuclear burn-wave propagation
+    after antiproton-induced spark ignition in compressed Li&#8322;DT at &kappa; = 30.
+    Red central sphere: spark region at T<sub>c</sub> = 13.6 keV. Orange/yellow spokes:
+    charged-pion tracks depositing 12 MeV per annihilation locally. Green/yellow shells:
+    outgoing thermonuclear detonation wave. Blue outer shell: unburned Li&#8322;DT.
+    Drag to orbit; scroll to zoom; use the slider to step through burn evolution.
+  </div>
+
+  <div class="eq">
+    <span class="num">Eq. (9)</span>E<sub>c</sub> / &kappa;<sup>2</sup> &nbsp;=&nbsp;
+    N &middot; ( &nu; &middot; (dE/dx) &middot; &kappa; &middot; R<sub>s</sub> + &epsilon; )
+    &nbsp;&nbsp;<span style="color:#77756e">// spark-energy condition</span>
+  </div>
+  <div class="eq">
+    <span class="num">Eq. (10)</span>E<sub>c</sub> / &kappa;<sup>2</sup> &nbsp;=&nbsp;
+    (3/2) &middot; z &middot; a &middot; &kappa; &middot; &rho; &middot; N<sub>A</sub>
+    &middot; (4&pi;/3) R<sub>s</sub><sup>3</sup> &middot; kT<sub>c</sub>
+    &nbsp;&nbsp;<span style="color:#77756e">// temperature condition</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="num">~10<sup>18</sup></div><div class="lab">Antiprotons required<br>(&kappa; = 30, Gsponer-Hurni 1986)</div></div>
+    <div class="stat"><div class="num">3 &pi;<sup>&plusmn;</sup></div><div class="lab">Charged pions per p&#772;-p annihilation<br>(236 MeV each)</div></div>
+    <div class="stat"><div class="num">12 MeV</div><div class="lab">Local energy deposition &epsilon;<br>per annihilation in DT</div></div>
+    <div class="stat"><div class="num">10<sup>17</sup></div><div class="lab">Antiprotons with U-238 seed<br>(Shmatov 2005 refinement)</div></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- §2  IMPLOSION GEOMETRY                                           -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<section id="sec2">
+  <h2><span class="h2-num">§ 2</span>Implosion geometry (collapsing Li&#8322;DT shell)</h2>
+  <div class="lede">
+    The 1-kt antimatter-triggered thermonuclear device conceived by Gsponer-Hurni
+    (1986, Figure 2 of the source PDF): one microgram of antihydrogen levitated
+    in a microcryostat at the centre of a 100-gram Li&#8322;DT sphere, imploded by
+    eight chemical-explosive lenses. At peak compression (&kappa; &asymp; 30) the
+    shell contacts the antihydrogen; annihilation triggers the outgoing
+    thermonuclear detonation wave.
+  </div>
+
+  <div class="viewer" id="viewer2">
+    <div class="overlay">
+      <div class="label">Antimatter-Triggered Implosion Geometry</div>
+      <div class="sub">After Gsponer-Hurni 1986, Figure 2</div>
+    </div>
+    <div class="legend">
+      <div class="item"><div class="swatch" style="background:#c43030"></div>Antihydrogen pellet (1 &micro;g)</div>
+      <div class="item"><div class="swatch" style="background:#3a5a78"></div>Li&#8322;DT shell (100 g)</div>
+      <div class="item"><div class="swatch" style="background:#606060"></div>Chemical-explosive lenses (&times;8)</div>
+      <div class="item"><div class="swatch" style="background:#f0d070"></div>Implosion direction</div>
+    </div>
+    <canvas id="canvas2"></canvas>
+    <div class="timeline">
+      <span class="label">Compression &kappa;</span>
+      <input type="range" id="imp-slider" min="1" max="30" value="1" step="0.5">
+      <span class="time-val" id="imp-kappa">&kappa; = 1.0</span>
+      <button class="play" id="imp-play">Implode</button>
+    </div>
+    <div class="controls">DRAG to rotate &middot; SCROLL to zoom</div>
+  </div>
+  <div class="caption">
+    Figure 2 &mdash; Three.js interactive reconstruction of the implosion geometry from
+    Gsponer-Hurni 1986, Figure 2. At &kappa; = 1 the shell is at full radius; drag
+    the slider toward &kappa; = 30 to compress the shell onto the central antihydrogen
+    pellet. The eight inward-pointing arrows represent the chemical-explosive-lens
+    implosion system. The blue translucent shell is Li&#8322;DT; the red central sphere
+    is the antihydrogen pellet (not to scale &mdash; actual pellet ~0.1 mm radius, shell
+    ~ cm-scale).
+  </div>
+
+  <div class="two-col">
+    <div class="col">
+      <h3>Configuration parameters</h3>
+      <p><b>Antihydrogen pellet:</b> ~1 &micro;g, solid, levitated in a 1 mm cryostat at &lt; 0.1 K,
+      magnetically suspended at the geometric centre of the device.</p>
+      <p><b>Li&#8322;DT shell:</b> 100 g, radius ~cm at &kappa; = 1, compressed to ~mm at &kappa; = 30.
+      Lithium breeds tritium in situ via the <sup>6</sup>Li(n,&alpha;)T reaction.</p>
+      <p><b>Chemical-explosive lenses:</b> 8 sectors arranged octahedrally for spherical-implosion
+      uniformity at the &lt;1% level required for symmetric burn ignition.</p>
+    </div>
+    <div class="col">
+      <h3>Spark conditions (after compression)</h3>
+      <p><b>Spark radius R<sub>s</sub>:</b> 0.07 cm at &kappa; = 30 (Li&#8322;DT).</p>
+      <p><b>Critical temperature T<sub>c</sub>:</b> 13.6 keV (Li&#8322;DT) or 4 keV (DT).</p>
+      <p><b>Critical energy E<sub>c</sub>:</b> 3&times;10<sup>26</sup> keV (Li&#8322;DT)
+      or 5&times;10<sup>25</sup> keV (DT) &mdash; both scale as 1/&kappa;<sup>2</sup>.</p>
+      <p><b>Antiproton count:</b> ~10<sup>18</sup> at &kappa; = 30 (Gsponer-Hurni 1986);
+      ~10<sup>17</sup> with U-238 seed (Shmatov 2005).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- §3  PLASMA-JET DEW                                               -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<section id="sec3">
+  <h2><span class="h2-num">§ 3</span>Plasma-jet directed-energy weapon (DEW)</h2>
+  <div class="lede">
+    A shaped thermonuclear microexplosion produces, by hydrodynamic focusing, a
+    collimated hypervelocity plasma jet. The principle is identical to a conventional
+    shaped charge, except the energy source is a fusion burn rather than a chemical
+    explosion. Jet velocity: 100-1000 km/s. Jet temperature: keV range. Range:
+    100-1000 km in vacuum (set by jet divergence and solar-wind interaction).
+  </div>
+
+  <div class="viewer" id="viewer3">
+    <div class="overlay">
+      <div class="label">Plasma-Jet Directed-Energy Weapon</div>
+      <div class="sub">Shaped thermonuclear microexplosion</div>
+    </div>
+    <div class="legend">
+      <div class="item"><div class="swatch" style="background:#3a5a78"></div>Shaped thermonuke charge</div>
+      <div class="item"><div class="swatch" style="background:#f0d070"></div>Tamping material</div>
+      <div class="item"><div class="swatch" style="background:#ff5050"></div>Plasma jet (v &gt; 100 km/s)</div>
+      <div class="item"><div class="swatch" style="background:#a03030"></div>Jet core (T ~ keV)</div>
+      <div class="item"><div class="swatch" style="background:#606060"></div>Target (illustrative)</div>
+    </div>
+    <canvas id="canvas3"></canvas>
+    <div class="timeline">
+      <span class="label">Jet propagation t / &tau;</span>
+      <input type="range" id="jet-slider" min="0" max="100" value="0" step="0.5">
+      <span class="time-val" id="jet-time">0.00 &tau;</span>
+      <button class="play" id="jet-play">Fire</button>
+    </div>
+    <div class="controls">DRAG to rotate &middot; SCROLL to zoom</div>
+  </div>
+  <div class="caption">
+    Figure 3 &mdash; Three.js interactive simulation of the plasma-jet DEW concept.
+    The lower hemispherical charge (blue wireframe) detonates; the shaped-charge
+    geometry focuses the plasma into a hypervelocity jet (yellow-red gradient cone)
+    that propagates toward the target (gray block at top, illustrative only and
+    not to scale). The jet&rsquo;s velocity is sub-1000 km/s, temperature is in the
+    keV range, and effective range in vacuum is 100-1000 km. No working device
+    exists; TRL = 2 (conceptual).
+  </div>
+
+  <div class="two-col">
+    <div class="col">
+      <h3>Performance envelope (conceptual)</h3>
+      <p><b>Yield range:</b> 0.1-1 kt TNT-equivalent per shot (micro explosion regime).</p>
+      <p><b>Jet velocity:</b> 100-1000 km/s, set by fusion-burn temperature and
+      shaped-charge geometry.</p>
+      <p><b>Jet temperature:</b> keV range, set by fusion-product energy partition.</p>
+      <p><b>Effective range:</b> 100-1000 km in space (set by jet geometric
+      divergence and interaction with residual solar-wind plasma).</p>
+    </div>
+    <div class="col">
+      <h3>Open-literature status</h3>
+      <p><b>Original reference:</b> Gsponer &amp; Hurni (1986), Section 7:
+      &ldquo;directed energy weapons applications may include the trigger of
+      thermonuclear plasma jets.&rdquo;</p>
+      <p><b>Underlying physics:</b> studied in Russian literature on cumulative jets
+      from thermonuclear microexplosions and U.S. SDI-era nuclear-explosion-pumped-laser
+      literature.</p>
+      <p><b>Current TRL:</b> 2 (concept formulation). No public-source engineering
+      study gives a working design.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- ARMS-CONTROL NOTE                                                -->
+<!-- ════════════════════════════════════════════════════════════════ -->
+<section>
+  <h2><span class="h2-num">§ 4</span>Arms-control and non-proliferation context</h2>
+  <div class="lede">
+    The technologies visualized above are at the intersection of six regimes
+    (CTBT, NPT, IAEA safeguards, civilian fusion research, antimatter production,
+    defense R&amp;D) none of which provides a single verification gate that
+    comprehensively covers them. The PDF report (Chapter 7) elaborates the policy
+    options proposed in the open literature: no-first-pure-fusion-weapon
+    declarations, threshold-yield declarations for ICF/MTF facilities, and
+    safeguarding of large antimatter-production facilities above a stated rate.
+  </div>
+
+  <table>
+    <thead><tr>
+      <th>Application track</th>
+      <th>Yield range (TNT-eq.)</th>
+      <th>Driver</th>
+      <th>Special material</th>
+      <th>TRL (this report)</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>NIF ICF (laboratory ignition)</td><td class="num">~1 kg per shot</td><td>Laser (2 MJ UV)</td><td>DT, hohlraum</td><td class="num">9 (demonstrated)</td></tr>
+      <tr><td>MTF pure-fusion concept (IEER/Bulletin)</td><td class="num">~1 tonne</td><td>Chemical / pneumatic liner</td><td>DT, lithium, liquid metal</td><td class="num">4</td></tr>
+      <tr><td>ACMF 1-kt antimatter device</td><td class="num">~1 kt</td><td>Chemical implosion + p&#772;</td><td>Li&#8322;DT, ~10<sup>18</sup> p&#772;</td><td class="num">3</td></tr>
+      <tr><td>Fast ignition (petawatt laser)</td><td class="num">~1-10 kg</td><td>Petawatt laser + compression</td><td>DT, cone target</td><td class="num">6</td></tr>
+      <tr><td>Plasma-jet DEW (§3)</td><td class="num">~0.1-1 kt</td><td>Shaped MTF or ACMF charge</td><td>As above + shaping lens</td><td class="num">2 (conceptual)</td></tr>
+      <tr><td>GRASER pumping</td><td class="num">~0.1-1 kt</td><td>ACMF + isomer rod</td><td>Nuclear isomer (e.g. <sup>178m2</sup>Hf)</td><td class="num">2 (conceptual)</td></tr>
+      <tr><td>AIM propulsion</td><td class="num">~0.1-1 kt per pulse</td><td>Magnetic nozzle + p&#772; cloud</td><td>~10<sup>10</sup> p&#772;/pulse, D-<sup>3</sup>He</td><td class="num">3</td></tr>
+      <tr><td>X-ray laser pumping (Teller-Wood)</td><td class="num">~1-10 kt</td><td>NIF-class laser or ACMF</td><td>Lasing medium (Se, Y)</td><td class="num">4</td></tr>
+    </tbody>
+  </table>
+  <p class="caption">Table &mdash; Application matrix reproduced from Table 4.1 of the PDF report.</p>
+</section>
+
+<footer>
+  <div class="row">
+    <div class="left">AUMNIUM TECHNOLOGY · TECHNICAL ASSESSMENT</div>
+    <div class="right">NOVEMBER 2026 · REN TIMER, CTO</div>
+  </div>
+  <p>
+    Author: Ren Timer, CTO &mdash; Aumnium Technology. URLs: hardagent.one &middot;
+    aumnium.tech/products &middot; stoXswap.com/anonhost &middot; stoXswap.com/finance.
+    Source basis: Gsponer &amp; Hurni 1986/2005 (arXiv:physics/0507114) and 26 cited
+    open sources including Perkins-Orth-Tabak 2004 (Nuclear Fusion 44),
+    Shmatov 2005 (JBIS 58), Azizi 2023 (Physica Scripta 98), NIF Annual Reports
+    2022/2023, ALPHA November 2025 CERN news, BASE 2024 600-day storage result,
+    Leonhardt et al. Nature 2026 (BASE-STEP), General Fusion LM26 results 2024-2025,
+    IEER 1998 <i>Dangerous Thermonuclear Quest</i>, Bulletin of the Atomic Scientists
+    November 2024, Jones-von Hippel <i>Science &amp; Global Security</i> 6 (1998),
+    Caravita et al. arXiv:2503.22471 (2025). Three.js (r160) used for WebGL rendering.
+  </p>
+  <p style="margin-top:14px;font-size:9pt;color:var(--c-muted)">
+    Unclassified. No classified, proprietary, or build-instruction content.
+    Intended audience: policy and defense analysts requiring a technical-understanding
+    brief of the open-literature state of the art.
+  </p>
+</footer>
+
+<!-- Three.js from CDN -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ─── Common helpers ─────────────────────────────────────────────────
+const ACCENT = 0xc43030;
+const ACCENT2 = 0x3a5a78;
+const BURN_COLOR = 0xe07c30;
+const WAVE_COLOR = 0x6b9b4a;
+const PION_COLOR = 0xf0d070;
+const FUEL_COLOR = 0x3a5a78;
+const JET_COLOR = 0xff5050;
+const JET_CORE = 0xa03030;
+const TAMP = 0xf0d070;
+const TGT = 0x606060;
+
+function makeRenderer(canvas) {
+  const renderer = new THREE.WebGLRenderer({
+    canvas, antialias: true, alpha: false,
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x0e1216, 1);
+  return renderer;
+}
+
+function makeScene() {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0e1216);
+  scene.fog = new THREE.Fog(0x0e1216, 8, 25);
+  // Lighting
+  const amb = new THREE.AmbientLight(0xffffff, 0.35);
+  scene.add(amb);
+  const key = new THREE.DirectionalLight(0xffffff, 1.0);
+  key.position.set(4, 5, 3);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0x8899aa, 0.4);
+  fill.position.set(-3, -2, -4);
+  scene.add(fill);
+  return scene;
+}
+
+function makeCamera(canvas, fov = 45, dist = 5) {
+  const w = canvas.clientWidth || 800;
+  const h = canvas.clientHeight || 500;
+  const cam = new THREE.PerspectiveCamera(fov, w / h, 0.1, 100);
+  cam.position.set(dist, dist * 0.7, dist);
+  return cam;
+}
+
+function makeControls(cam, canvas) {
+  const ctl = new OrbitControls(cam, canvas);
+  ctl.enableDamping = true;
+  ctl.dampingFactor = 0.08;
+  ctl.rotateSpeed = 0.6;
+  ctl.zoomSpeed = 0.8;
+  ctl.minDistance = 2;
+  ctl.maxDistance = 15;
+  return ctl;
+}
+
+function onResize(canvas, cam, renderer) {
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight || Math.round(w * 0.55);
+  if (canvas.height !== h) {
+    renderer.setSize(w, h, false);
+    cam.aspect = w / h;
+    cam.updateProjectionMatrix();
+  }
+}
+
+// Set canvas height based on container width
+function setCanvasSize(canvas, aspect = 0.55) {
+  const w = canvas.clientWidth;
+  const h = Math.round(w * aspect);
+  canvas.style.height = h + 'px';
+  canvas.width = w * (window.devicePixelRatio || 1);
+  canvas.height = h * (window.devicePixelRatio || 1);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// §1 — ANTIPROTON BURN
+// ══════════════════════════════════════════════════════════════════
+(function burnSim() {
+  const canvas = document.getElementById('canvas1');
+  setCanvasSize(canvas, 0.55);
+  const renderer = makeRenderer(canvas);
+  const scene = makeScene();
+  const cam = makeCamera(canvas, 45, 6);
+  const ctl = makeControls(cam, canvas);
+
+  // Fuel outer shell (unburned, always visible)
+  const fuelGeo = new THREE.SphereGeometry(2.0, 48, 32);
+  const fuelMat = new THREE.MeshPhongMaterial({
+    color: FUEL_COLOR,
+    transparent: true, opacity: 0.10,
+    side: THREE.DoubleSide,
+  });
+  const fuelMesh = new THREE.Mesh(fuelGeo, fuelMat);
+  scene.add(fuelMesh);
+  // Wireframe overlay
+  const fuelWire = new THREE.Mesh(fuelGeo,
+    new THREE.MeshBasicMaterial({ color: FUEL_COLOR, wireframe: true,
+      transparent: true, opacity: 0.20 }));
+  scene.add(fuelWire);
+
+  // Burn-wave shells (spark, front, wave)
+  const shellRadii = [0.18, 0.65, 1.30, 1.95];
+  const shellColors = [ACCENT, BURN_COLOR, WAVE_COLOR, FUEL_COLOR];
+  const shellMats = shellColors.map((c, i) => new THREE.MeshPhongMaterial({
+    color: c, transparent: true,
+    opacity: [0.95, 0.55, 0.35, 0.15][i],
+    side: THREE.DoubleSide,
+  }));
+  const shellMeshes = shellRadii.map((r, i) => {
+    const g = new THREE.SphereGeometry(r, 32, 24);
+    return new THREE.Mesh(g, shellMats[i]);
+  });
+  shellMeshes.forEach(m => scene.add(m));
+
+  // Pion tracks (yellow spokes)
+  const pionGroup = new THREE.Group();
+  const nPions = 14;
+  for (let i = 0; i < nPions; i++) {
+    const theta = (i / nPions) * Math.PI * 2;
+    const phi = (i % 4) * 0.6;
+    const r = 2.0;
+    const x = r * Math.sin(phi) * Math.cos(theta);
+    const y = r * Math.sin(phi) * Math.sin(theta);
+    const z = r * Math.cos(phi);
+    const pts = [new THREE.Vector3(0,0,0), new THREE.Vector3(x,y,z)];
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    const mat = new THREE.LineBasicMaterial({ color: PION_COLOR,
+      transparent: true, opacity: 0.7 });
+    pionGroup.add(new THREE.Line(geo, mat));
+  }
+  scene.add(pionGroup);
+
+  // Animation state
+  let t = 0;
+  let playing = false;
+  const slider = document.getElementById('burn-slider');
+  const timeVal = document.getElementById('burn-time');
+  const playBtn = document.getElementById('burn-play');
+
+  function update(tNorm) {
+    // tNorm 0..1: spark -> wave -> unburned
+    // Shell 0 (spark): scales 0.18 (full) -> smaller as wave moves out
+    // Shell 1 (burn front): visible when tNorm in [0.1, 0.8], expands
+    // Shell 2 (wave): visible when tNorm in [0.3, 1.0], expands
+    // Shell 3 (unburned outer): visible always but shrinks as wave reaches it
+    const a0 = Math.max(0.95 - tNorm * 1.5, 0.05);
+    shellMats[0].opacity = a0;
+    shellMeshes[0].scale.setScalar(1.0 - tNorm * 0.4);
+
+    const a1 = Math.min(tNorm * 4, 1.0) * (1.0 - tNorm);
+    shellMats[1].opacity = Math.max(a1 * 0.55, 0.05);
+    shellMeshes[1].scale.setScalar(0.4 + tNorm * 1.4);
+
+    const a2 = Math.max((tNorm - 0.2) * 1.5, 0.0) * (1.0 - tNorm * 0.5);
+    shellMats[2].opacity = Math.max(a2 * 0.5, 0.05);
+    shellMeshes[2].scale.setScalar(0.6 + tNorm * 1.5);
+
+    // Pion opacity fades as burn develops
+    pionGroup.children.forEach(l => {
+      l.material.opacity = 0.7 * (1.0 - tNorm * 0.7);
+    });
+  }
+
+  slider.addEventListener('input', e => {
+    t = parseFloat(e.target.value) / 100;
+    timeVal.textContent = t.toFixed(2) + ' τ';
+    update(t);
+  });
+
+  playBtn.addEventListener('click', () => {
+    playing = !playing;
+    playBtn.textContent = playing ? 'Pause' : 'Play';
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    if (playing) {
+      t = (t + 0.005) % 1.0;
+      slider.value = t * 100;
+      timeVal.textContent = t.toFixed(2) + ' τ';
+      update(t);
+    }
+    pionGroup.rotation.y += 0.003;
+    fuelMesh.rotation.y += 0.0008;
+    fuelWire.rotation.y += 0.0008;
+    ctl.update();
+    onResize(canvas, cam, renderer);
+    renderer.render(scene, cam);
+  }
+  animate();
+})();
+
+// ══════════════════════════════════════════════════════════════════
+// §2 — IMPLOSION GEOMETRY
+// ══════════════════════════════════════════════════════════════════
+(function implosionSim() {
+  const canvas = document.getElementById('canvas2');
+  setCanvasSize(canvas, 0.55);
+  const renderer = makeRenderer(canvas);
+  const scene = makeScene();
+  const cam = makeCamera(canvas, 45, 7);
+  const ctl = makeControls(cam, canvas);
+
+  // Antihydrogen pellet (central, fixed size)
+  const pelletGeo = new THREE.SphereGeometry(0.18, 32, 24);
+  const pelletMat = new THREE.MeshPhongMaterial({
+    color: ACCENT, emissive: ACCENT, emissiveIntensity: 0.5,
+    transparent: true, opacity: 0.95,
+  });
+  const pellet = new THREE.Mesh(pelletGeo, pelletMat);
+  scene.add(pellet);
+
+  // Li2DT shell (variable radius based on kappa)
+  const shellGeo = new THREE.SphereGeometry(2.0, 48, 32);
+  const shellMat = new THREE.MeshPhongMaterial({
+    color: FUEL_COLOR, transparent: true, opacity: 0.18,
+    side: THREE.DoubleSide,
+  });
+  const shell = new THREE.Mesh(shellGeo, shellMat);
+  scene.add(shell);
+  const shellWire = new THREE.Mesh(shellGeo, new THREE.MeshBasicMaterial({
+    color: FUEL_COLOR, wireframe: true, transparent: true, opacity: 0.30,
+  }));
+  scene.add(shellWire);
+
+  // Chemical-explosive lens positions (8 sectors, octahedral)
+  const lenses = [];
+  const lensArrows = [];
+  const lensPositions = [];
+  for (let i = 0; i < 8; i++) {
+    const theta = i * Math.PI / 4;
+    const r = 2.7;
+    const x = r * Math.cos(theta);
+    const y = r * Math.sin(theta);
+    lensPositions.push({ x, y, z: 0 });
+    const g = new THREE.SphereGeometry(0.10, 16, 12);
+    const m = new THREE.MeshPhongMaterial({ color: 0x606060,
+      transparent: true, opacity: 0.85 });
+    const lens = new THREE.Mesh(g, m);
+    lens.position.set(x, y, 0);
+    lenses.push(lens);
+    scene.add(lens);
+  }
+
+  // Inward arrows (implosion direction) - drawn as cones
+  function makeArrow(from, to, color) {
+    const dir = new THREE.Vector3().subVectors(to, from).normalize();
+    const len = from.distanceTo(to);
+    const g = new THREE.ConeGeometry(0.07, len * 0.85, 12);
+    const m = new THREE.MeshPhongMaterial({ color,
+      transparent: true, opacity: 0.8 });
+    const cone = new THREE.Mesh(g, m);
+    // Orient cone to point along dir
+    cone.position.copy(from).addScaledVector(dir, len * 0.5);
+    cone.quaternion.setFromUnitVectors(
+      new THREE.Vector3(0, 1, 0), dir);
+    return cone;
+  }
+  // Build arrows
+  lensPositions.forEach(p => {
+    const start = new THREE.Vector3(p.x * 1.2, p.y * 1.2, p.z);
+    const end = new THREE.Vector3(p.x * 0.5, p.y * 0.5, p.z);
+    const arrow = makeArrow(start, end, PION_COLOR);
+    lensArrows.push(arrow);
+    scene.add(arrow);
+  });
+
+  // Animation state
+  let kappa = 1.0;
+  let playing = false;
+  const slider = document.getElementById('imp-slider');
+  const kappaVal = document.getElementById('imp-kappa');
+  const playBtn = document.getElementById('imp-play');
+
+  function update(k) {
+    // Shell radius scales as 1/k^(1/3) (volume conservation)
+    const r = 1.0 / Math.cbrt(k);
+    shell.scale.setScalar(r);
+    shellWire.scale.setScalar(r);
+    // Shell opacity grows as it compresses
+    shellMat.opacity = 0.10 + (k - 1) / 29 * 0.25;
+    shellWire.material.opacity = 0.20 + (k - 1) / 29 * 0.25;
+    // Lens positions move inward
+    const lensR = 2.7 - (k - 1) / 29 * 1.5;
+    lenses.forEach((lens, i) => {
+      const theta = i * Math.PI / 4;
+      lens.position.x = lensR * Math.cos(theta);
+      lens.position.y = lensR * Math.sin(theta);
+    });
+    // Arrows shrink as implosion proceeds
+    lensArrows.forEach((a, i) => {
+      const theta = i * Math.PI / 4;
+      const r0 = lensR * 1.05;
+      const r1 = lensR * 0.5 - (k - 1) / 29 * 1.0;
+      const start = new THREE.Vector3(r0 * Math.cos(theta), r0 * Math.sin(theta), 0);
+      const end = new THREE.Vector3(Math.max(r1, 0.3) * Math.cos(theta),
+        Math.max(r1, 0.3) * Math.sin(theta), 0);
+      // Update position and orientation
+      const dir = new THREE.Vector3().subVectors(end, start).normalize();
+      const len = start.distanceTo(end);
+      a.scale.y = len / 0.85;
+      a.position.copy(start).addScaledVector(dir, len * 0.5);
+      a.quaternion.setFromUnitVectors(
+        new THREE.Vector3(0, 1, 0), dir);
+    });
+  }
+
+  slider.addEventListener('input', e => {
+    kappa = parseFloat(e.target.value);
+    kappaVal.textContent = 'κ = ' + kappa.toFixed(1);
+    update(kappa);
+  });
+
+  playBtn.addEventListener('click', () => {
+    playing = !playing;
+    playBtn.textContent = playing ? 'Reset' : 'Implode';
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    if (playing) {
+      kappa = Math.min(kappa + 0.15, 30);
+      slider.value = kappa;
+      kappaVal.textContent = 'κ = ' + kappa.toFixed(1);
+      update(kappa);
+      if (kappa >= 30) {
+        playing = false;
+        playBtn.textContent = 'Implode';
+      }
+    }
+    pellet.rotation.y += 0.01;
+    shell.rotation.y += 0.001;
+    shellWire.rotation.y += 0.001;
+    ctl.update();
+    onResize(canvas, cam, renderer);
+    renderer.render(scene, cam);
+  }
+  animate();
+})();
+
+// ══════════════════════════════════════════════════════════════════
+// §3 — PLASMA JET DEW
+// ══════════════════════════════════════════════════════════════════
+(function jetSim() {
+  const canvas = document.getElementById('canvas3');
+  setCanvasSize(canvas, 0.55);
+  const renderer = makeRenderer(canvas);
+  const scene = makeScene();
+  scene.fog = new THREE.Fog(0x0e1216, 5, 18);
+  const cam = makeCamera(canvas, 45, 8);
+  cam.position.set(3.5, 1.5, 5);
+  const ctl = makeControls(cam, canvas);
+
+  // Hemispherical charge (lower dome)
+  const domeGeo = new THREE.SphereGeometry(0.7, 32, 16,
+    0, Math.PI * 2, Math.PI / 2, Math.PI / 2);
+  const domeMat = new THREE.MeshPhongMaterial({
+    color: ACCENT2, transparent: true, opacity: 0.25,
+    side: THREE.DoubleSide,
+  });
+  const dome = new THREE.Mesh(domeGeo, domeMat);
+  dome.position.y = 0;
+  scene.add(dome);
+  const domeWire = new THREE.Mesh(domeGeo, new THREE.MeshBasicMaterial({
+    color: ACCENT2, wireframe: true, transparent: true, opacity: 0.45,
+  }));
+  scene.add(domeWire);
+
+  // Tamping disc (above dome)
+  const tampGeo = new THREE.CylinderGeometry(0.7, 0.7, 0.1, 32);
+  const tampMat = new THREE.MeshPhongMaterial({
+    color: TAMP, transparent: true, opacity: 0.20,
+  });
+  const tamp = new THREE.Mesh(tampGeo, tampMat);
+  tamp.position.y = 0.05;
+  scene.add(tamp);
+
+  // Plasma jet cone (extending upward)
+  const jetGeo = new THREE.ConeGeometry(0.55, 3.0, 32, 16, true);
+  const jetMat = new THREE.MeshPhongMaterial({
+    color: JET_COLOR, transparent: true, opacity: 0.55,
+    side: THREE.DoubleSide,
+    emissive: JET_COLOR, emissiveIntensity: 0.3,
+  });
+  const jet = new THREE.Mesh(jetGeo, jetMat);
+  jet.position.y = 1.7;
+  scene.add(jet);
+
+  // Jet core (smaller cone)
+  const coreGeo = new THREE.ConeGeometry(0.18, 3.0, 24, 12, true);
+  const coreMat = new THREE.MeshPhongMaterial({
+    color: JET_CORE, transparent: true, opacity: 0.85,
+    emissive: JET_CORE, emissiveIntensity: 0.5,
+    side: THREE.DoubleSide,
+  });
+  const core = new THREE.Mesh(coreGeo, coreMat);
+  core.position.y = 1.7;
+  scene.add(core);
+
+  // Target block (top)
+  const tgtGeo = new THREE.BoxGeometry(0.5, 0.3, 0.5);
+  const tgtMat = new THREE.MeshPhongMaterial({
+    color: TGT, transparent: true, opacity: 0.5,
+  });
+  const tgt = new THREE.Mesh(tgtGeo, tgtMat);
+  tgt.position.y = 4.0;
+  scene.add(tgt);
+
+  // Axis line (faint)
+  const axisGeo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(0, 4.5, 0),
+  ]);
+  const axisMat = new THREE.LineBasicMaterial({ color: 0x808080,
+    transparent: true, opacity: 0.25 });
+  scene.add(new THREE.Line(axisGeo, axisMat));
+
+  // Particle system for plasma
+  const particleCount = 200;
+  const particleGeo = new THREE.BufferGeometry();
+  const positions = new Float32Array(particleCount * 3);
+  const velocities = new Float32Array(particleCount * 3);
+  const ages = new Float32Array(particleCount);
+  for (let i = 0; i < particleCount; i++) {
+    positions[i*3] = (Math.random() - 0.5) * 0.1;
+    positions[i*3+1] = 0.2;
+    positions[i*3+2] = (Math.random() - 0.5) * 0.1;
+    velocities[i*3] = (Math.random() - 0.5) * 0.01;
+    velocities[i*3+1] = 0.03 + Math.random() * 0.03;
+    velocities[i*3+2] = (Math.random() - 0.5) * 0.01;
+    ages[i] = Math.random();
+  }
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const particleMat = new THREE.PointsMaterial({
+    color: 0xff8050, size: 0.04, transparent: true, opacity: 0.7,
+    blending: THREE.AdditiveBlending,
+  });
+  const particles = new THREE.Points(particleGeo, particleMat);
+  scene.add(particles);
+
+  // Animation state
+  let t = 0;
+  let playing = false;
+  const slider = document.getElementById('jet-slider');
+  const timeVal = document.getElementById('jet-time');
+  const playBtn = document.getElementById('jet-play');
+
+  function update(tNorm) {
+    // tNorm 0..1: jet emerges and propagates
+    const jetLen = 0.05 + tNorm * 3.5;
+    jet.scale.y = jetLen / 3.0;
+    jet.position.y = 0.2 + jetLen / 2;
+    jet.material.opacity = 0.55 * Math.min(tNorm * 4, 1.0) * (1.0 - tNorm * 0.3);
+    core.scale.y = jetLen / 3.0;
+    core.position.y = 0.2 + jetLen / 2;
+    core.material.opacity = 0.85 * Math.min(tNorm * 4, 1.0) * (1.0 - tNorm * 0.3);
+    // Particle update
+    const pos = particleGeo.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+      if (ages[i] < tNorm * 1.5) {
+        pos[i*3] += velocities[i*3];
+        pos[i*3+1] += velocities[i*3+1];
+        pos[i*3+2] += velocities[i*3+2];
+      }
+      if (pos[i*3+1] > 4.0) {
+        pos[i*3] = (Math.random() - 0.5) * 0.1;
+        pos[i*3+1] = 0.2;
+        pos[i*3+2] = (Math.random() - 0.5) * 0.1;
+      }
+    }
+    particleGeo.attributes.position.needsUpdate = true;
+    particleMat.opacity = Math.min(tNorm * 4, 1.0) * 0.7 * (1.0 - tNorm * 0.3);
+  }
+
+  slider.addEventListener('input', e => {
+    t = parseFloat(e.target.value) / 100;
+    timeVal.textContent = t.toFixed(2) + ' τ';
+    update(t);
+  });
+
+  playBtn.addEventListener('click', () => {
+    playing = !playing;
+    playBtn.textContent = playing ? 'Pause' : 'Fire';
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    if (playing) {
+      t = (t + 0.005) % 1.0;
+      slider.value = t * 100;
+      timeVal.textContent = t.toFixed(2) + ' τ';
+      update(t);
+    }
+    dome.rotation.y += 0.003;
+    domeWire.rotation.y += 0.003;
+    core.rotation.y += 0.005;
+    ctl.update();
+    onResize(canvas, cam, renderer);
+    renderer.render(scene, cam);
+  }
+  animate();
+})();
+
+// ─── Re-size handler for all viewers ──────────────────────────────
+window.addEventListener('resize', () => {
+  // All three viewers handle their own resize in their animate loops via onResize()
+});
+</script>
+</body>
+</html>
